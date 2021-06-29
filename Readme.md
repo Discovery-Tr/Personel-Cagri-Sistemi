@@ -1,29 +1,33 @@
-NODEMCU ÇAĞRI YÖNETİM SİSTEMİ
-16/06/2021 / Arduino / 0 Yorum
+# NODEMCU ÇAĞRI YÖNETİM SİSTEMİ
 
+https://kirmiziyuz.com/arduino/nodemcu-cagri-yonetim-sistemi.html
 
-Server Şeması
+# Server Şeması
+<p align="center">
+  <img src="https://kirmiziyuz.com/wp-content/uploads/2021/06/SERVER-e1623802080862.png"/>
+</p>
 
+# Client Şeması
+<p align="center">
+  <img src="https://kirmiziyuz.com/wp-content/uploads/2021/06/CLIENT_bb-e1623802170748.png"/>
+</p>
 
+# Web Yönetim Paneli
+<p align="center">
+  <img src="https://kirmiziyuz.com/wp-content/uploads/2021/06/cagri.png"/>
+</p>
 
-Client Şeması
-
-
-
-Web Yönetim Paneli
-
- 
-
-
-
-Esp32 Vroom Pinout
+# Esp32 Vroom Pinout
+<p align="center">
+  <img src="https://kirmiziyuz.com/wp-content/uploads/2021/06/ESP32-38-PIN-DEVBOARD-768x444.png"/>
+</p>
 
 7 adet NodeMCU kullanarak 1i server 6 sı client olarak kullanılan personel çağrı sistemi. Server olarak Esp32 Vroom kullanıldı. Bu sistem kafelerde ve restoranlarda kullanıma müsaittir. Cihaz sayısı arttırılabilir. Çağrılar web üzerinden ve aynı zamanda server üzerinde bulunan ledler ve LCD panel üzerinden görülebilmektedir. Server da kullanılan LCD 4×20 dir.
 
  
 
-Server Kodu:
-
+# Server Kodu:
+```
 #include <WiFi.h>
 #include <LiquidCrystal_I2C.h>
 
@@ -62,7 +66,6 @@ const int kullanici6 = 2;
 const int resetButton = 15;
 const int buzzer = 12; 
 
-
 // şimdiki zamanı milis için tanımlama
 unsigned long simdikizaman = millis();
 
@@ -71,7 +74,6 @@ unsigned long eskizaman = 0;
 
 // Zaman aşımı süresini milisaniye cinsinden tanımlayama (örn: 2000ms = 2s)
 const long zamanasimi = 2000;
-
 
 void setup() {
 etiket();
@@ -87,7 +89,6 @@ pinMode(kullanici6,OUTPUT);
 pinMode(resetButton,INPUT_PULLUP);
 pinMode(buzzer, OUTPUT);
 
-
 digitalWrite(kullanici1, LOW);
 digitalWrite(kullanici2, LOW);
 digitalWrite(kullanici3, LOW);
@@ -95,12 +96,9 @@ digitalWrite(kullanici4, LOW);
 digitalWrite(kullanici5, LOW);
 digitalWrite(kullanici6, LOW);
 
-
 if (!WiFi.config(local_IP, gateway, subnet)) {
     Serial.println("STA Failed to configure");
   }
-
-
 
 Serial.print("Connecting to ");
 Serial.println(ssid);
@@ -154,8 +152,6 @@ lcd.setCursor(0,0);
   lcd.print("Oda6:");
   
 }
-
-
 
 void Oda1(){
   for (int  i= 0; i < 3; i++)
@@ -224,7 +220,6 @@ void Oda4(){
     digitalWrite(kullanici4, HIGH);
     }
   }
-
   
 void Oda5(){
   for (int i=0; i<3; i++)
@@ -259,6 +254,7 @@ void Oda6(){
     digitalWrite(kullanici6, HIGH);
     }
   }
+  
 void loop(){
 
    unsigned long simdikizaman1 = millis();
@@ -284,8 +280,6 @@ void loop(){
     etiket();
   }
   
-
-
 if (client) { 
 Serial.println("New Client."); 
 String currentLine = "";
@@ -305,11 +299,9 @@ client.println("Content-type:text/html");
 client.println("Connection: close");
 client.println();
 
-
 if (header.indexOf("GET /1/on") >= 0) {
 Serial.println("Kullanıcı1 LED is on");
 outputkullanici1 = "on";
-
 
 Oda1();
 
@@ -479,19 +471,16 @@ Serial.println("Client disconnected.");
 Serial.println("");
 }
 }
+```
 
-
-  
-Client Kodu:
-
+# Client Kodu:
+```
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 
 // Enter your wifi network name and Wifi Password
 const char* ssid = "Wifi Name";
 const char* password = "Wifi Pass";
-
-
 
 // Set your Static IP address
 IPAddress local_IP(192, 168, 1, 28);
@@ -500,10 +489,8 @@ IPAddress gateway(192, 168, 1, 1);
 
 IPAddress subnet(255, 255, 255, 0);
 
-
 const int kullanici1 = 5;
 const int button = 13; 
-
 
 void setup() {
   WiFi.begin(ssid, password);
@@ -519,7 +506,6 @@ Serial.begin(115200);
 
 pinMode(kullanici1, OUTPUT);
 pinMode (button,INPUT_PULLUP);
-
 
 if (!WiFi.config(local_IP, gateway, subnet)) {
     Serial.println("STA Failed to configure");
@@ -559,3 +545,4 @@ void loop(){
   }
  
 }
+```
